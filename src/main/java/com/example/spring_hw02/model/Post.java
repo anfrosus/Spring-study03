@@ -29,9 +29,9 @@ public class Post extends TimeStamped {
     @Column(nullable = false)
     private String content;
 
-//    @OneToMany
-//    @JoinColumn
-//    private List<Comment> comment;
+    //컬럼으로 만들지는 않지만 ? 객체간의 관계
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<Comment> comment;
 
     public Post(PostRequestDto postRequestDto, Member member) {
         this.title = postRequestDto.getTitle();

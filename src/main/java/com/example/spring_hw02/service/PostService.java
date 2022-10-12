@@ -24,7 +24,6 @@ public class PostService {
 
     private final PostRepsitory postRepsitory;
     private final MemberRepository memberRepository;
-
     private final CommentRepository commentRepository;
 
     //모두 조회하기
@@ -83,7 +82,7 @@ public class PostService {
 
     //삭제하기
     @Transactional
-    public void deletePost(Long id) {
+    public Long deletePost(Long id) {
         //넘어온 id는 해당 글의 id가 들어온다고 가정
         //위와 마찬가지로 현재로그인 id를 글의 저장되어있는 MEMBER_ID와 대조하기
         Post post1 = postRepsitory.findById(id).orElseThrow(()-> new IllegalArgumentException("해당 글이 없습니다."));
@@ -92,7 +91,9 @@ public class PostService {
         if (authorId == currentId) {
             postRepsitory.deleteById(id);
             //글 삭제시 댓글도 모두 삭제
-            commentRepository.deleteAllByPostId(id);
+            //Post 에서 Comment 에 cascade 적용.
+//            commentRepository.deleteAllByPostId(id);
+            return id;
         } else {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");
         }
