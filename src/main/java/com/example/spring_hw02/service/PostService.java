@@ -40,8 +40,8 @@ public class PostService {
 
     //게시글 작성하기
     @Transactional
-    public Long createPost(PostRequestDto postRequestDto, Long currentMemberId) {
-
+    public Long createPost(PostRequestDto postRequestDto) {
+        Long currentMemberId = SecurityUtil.getCurrentMemberId();
         Member member = memberRepository.findById(currentMemberId).orElseThrow(
                 () -> new IllegalArgumentException("로그인 후 이용해 주세요")
         );
@@ -59,7 +59,7 @@ public class PostService {
         );
         //댓글 넣어주기
         List<Comment> commentList = commentRepository.findAllByPostId(id);
-        List<CommentResponseDto> dtoList= new ArrayList<>();
+        List<CommentResponseDto> dtoList = new ArrayList<>();
         for(Comment a : commentList){
             dtoList.add(new CommentResponseDto(a));
         }

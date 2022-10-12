@@ -28,8 +28,8 @@ public class PostController {
     //글 작성
     @PostMapping("/post")
     public ResponseEntity<?> creatPost(@RequestBody PostRequestDto postRequestDto) {
-        try {Long currentId = SecurityUtil.getCurrentMemberId();
-            return new ResponseEntity(postService.createPost(postRequestDto, currentId), HttpStatus.valueOf(200));
+        try {
+            return new ResponseEntity(postService.createPost(postRequestDto), HttpStatus.valueOf(200));
         }
         catch (IllegalArgumentException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(403));

@@ -18,16 +18,23 @@ public class JwtFilter extends OncePerRequestFilter {
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String BEARER_PREFIX = "Bearer";
 
+    public static final String REFRESH_HEADER = "Refresh";
+
+    public static final String REFRESH_PREFIX = "Refresh";
+
     private final TokenProvider tokenProvider;
+
 
     // 실제 필터링 로직은 doFilterInternal 에 들어감
     // JWT 토큰의 인증 정보를 현재 쓰레드의 SecurityContext 에 저장하는 역할 수행
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
 
+
         // 1. Request Header 에서 토큰을 꺼냄
         // (아래 구현해놓은 헤더에서 토큰 꺼내오는 메소드)
         String jwt = resolveToken(request);
+//        String jwtR = resolveRefreshToken(request);
 
         // 2. validateToken 으로 토큰 유효성 검사
         // 정상 토큰이면 해당 토큰으로 Authentication 을 가져와서 SecurityContext 에 저장
@@ -37,6 +44,8 @@ public class JwtFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
+
+        //어디로 넘어가나요 ㅠㅠ?
         filterChain.doFilter(request, response);
     }
 
@@ -45,6 +54,16 @@ public class JwtFilter extends OncePerRequestFilter {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7);
+        }
+        return null;
+    }
+
+    // 영광의 상처..
+    private String resolveRefreshToken(HttpServletRequest request) {
+        String refreshToken = request.getHeader(REFRESH_HEADER);
+        if (StringUtils.hasText(refreshToken) && refreshToken.startsWith(REFRESH_PREFIX)) {
+            return refreshToken.substring(7);
+
         }
         return null;
     }
