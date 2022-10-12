@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,6 +29,10 @@ public class Post extends TimeStamped {
     @Column(nullable = false)
     private String content;
 
+//    @OneToMany
+//    @JoinColumn
+//    private List<Comment> comment;
+
     public Post(PostRequestDto postRequestDto, Member member) {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
@@ -38,4 +43,5 @@ public class Post extends TimeStamped {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
     }
+
 }

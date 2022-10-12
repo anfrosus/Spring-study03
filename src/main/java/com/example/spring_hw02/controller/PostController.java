@@ -1,10 +1,10 @@
 package com.example.spring_hw02.controller;
 
-import com.example.spring_hw02.config.MemberDetailsImpl;
 import com.example.spring_hw02.dto.AllPostResponseDto;
-import com.example.spring_hw02.dto.PostResponseDto;
 import com.example.spring_hw02.dto.PostRequestDto;
+import com.example.spring_hw02.dto.PostResponseDto;
 import com.example.spring_hw02.service.PostService;
+import com.example.spring_hw02.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +25,9 @@ public class PostController {
 
     //글 작성
     @PostMapping("/api/post")
-    public void creatPost(@RequestBody PostRequestDto postRequestDto,
-                          @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
-        postService.createPost(postRequestDto, memberDetails.getMember());
+    public void creatPost(@RequestBody PostRequestDto postRequestDto) {
+        Long currentId = SecurityUtil.getCurrentMemberId();
+        postService.createPost(postRequestDto, currentId);
     }
 
     //글 조회
@@ -38,8 +38,7 @@ public class PostController {
 
     //글 수정
     @PutMapping("/api/post/{id}")
-    public void updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto,
-                           @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+    public void updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto) {
         postService.updatePost(id, postRequestDto);
     }
 
