@@ -17,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +32,14 @@ public class AuthService {
     //회원가입 로직
     @Transactional
     public MemberResponseDto signup(AuthRequestDto authRequestDto) {
+        Pattern patternUserName = Pattern.compile("^[a-zA-Z0-9]{4,12}$");
+        Matcher matcherUserName = patternUserName.matcher(authRequestDto.getUserName());
+        Pattern patternPassword = Pattern.compile("^[a-z0-9]{4,32}$");
+        Matcher matcherPassword = patternPassword.matcher(authRequestDto.getPassword());
+
+        if (!matcherUserName.find() || !matcherPassword.find()){
+            throw new IllegalArgumentException("아이디와 비밀번호 형식을 확인하세요");
+        }
         if (memberRepository.existsByUserName(authRequestDto.getUserName())) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다");
         }

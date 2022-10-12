@@ -91,6 +91,8 @@ public class PostService {
         Long currentId = SecurityUtil.getCurrentMemberId();
         if (authorId == currentId) {
             postRepsitory.deleteById(id);
+            //글 삭제시 댓글도 모두 삭제
+            commentRepository.deleteAllByPostId(id);
         } else {
             throw new IllegalArgumentException("삭제 권한이 없습니다.");
         }
