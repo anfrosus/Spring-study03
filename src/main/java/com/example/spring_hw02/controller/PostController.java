@@ -2,7 +2,7 @@ package com.example.spring_hw02.controller;
 
 import com.example.spring_hw02.dto.AllPostResponseDto;
 import com.example.spring_hw02.dto.PostRequestDto;
-import com.example.spring_hw02.dto.PostResponseDto;
+import com.example.spring_hw02.exception.NoAuthorityException;
 import com.example.spring_hw02.service.PostService;
 import com.example.spring_hw02.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -27,21 +27,33 @@ public class PostController {
 
     //글 작성
     @PostMapping("/post")
-    public void creatPost(@RequestBody PostRequestDto postRequestDto) {
-        Long currentId = SecurityUtil.getCurrentMemberId();
-        postService.createPost(postRequestDto, currentId);
+    public ResponseEntity<?> creatPost(@RequestBody PostRequestDto postRequestDto) {
+        try {Long currentId = SecurityUtil.getCurrentMemberId();
+            return new ResponseEntity(postService.createPost(postRequestDto, currentId), HttpStatus.valueOf(200));
+        }
+        catch (IllegalArgumentException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(403));
+        }
     }
 
     //글 조회
     @GetMapping("/post/{id}")
-    public PostResponseDto getOne(@PathVariable Long id) {
-        return postService.getOne(id);
+    public ResponseEntity<?> getOne(@PathVariable Long id) {
+        try {return new ResponseEntity(postService.getOne(id), HttpStatus.valueOf(200));}
+        catch (IllegalArgumentException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(404));
+        }
     }
 
     //글 수정
     @PutMapping("/post/{id}")
-    public void updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto) {
-        postService.updatePost(id, postRequestDto);
+    public ResponseEntity<?> updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto) {
+        try {return new ResponseEntity(postService.updatePost(id, postRequestDto), HttpStatus.valueOf(200));}
+        catch (IllegalArgumentException e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(404));
+        }catch (NoAuthorityException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(403));
+        }
     }
 
     //글 삭제
@@ -52,6 +64,8 @@ public class PostController {
             return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(404));
             //e.getMessage()가 바디부분, (아무거나 올 수 있도록 <?>)
             //ResponseEntity<?>
+        }catch (NoAuthorityException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(403));
         }
     }
 
