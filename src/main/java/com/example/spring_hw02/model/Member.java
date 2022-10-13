@@ -11,9 +11,11 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "member")
 public class Member {
 
     @Id
+    @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore
     private Long id;

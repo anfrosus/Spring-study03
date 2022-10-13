@@ -54,21 +54,23 @@ public class AuthService {
     @Transactional
     public TokenDto login(AuthRequestDto authRequestDto) {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성 (Dto안에 Id,pw 를 담은 인증 객체 생성 함수확인)
-        // 그러면 아래에 이 객체를 담아 security에게 넘김
+        // 그러면 아래에 이 객체를 담아 security 에게 넘김
         UsernamePasswordAuthenticationToken authenticationToken = authRequestDto.toAuthentication();
 
         // 2. 실제로 검증 (사용자 비밀번호 체크) 이 이루어지는 부분
         //    authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
-        //    security 인증완료된 객체느낌
+        //    Authentication 객체를 만들어서 Provider 에게 넘김
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
+        // 원래는 security 의 AuthenticationProvider 에게 authentication 객체를 넘겨서 인증맡김
         // 위의 인증 정보(객체) 안에 Id, Pw 들어가 있겠지
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
 
         // 4. RefreshToken 저장
         RefreshToken refreshToken = RefreshToken.builder()
-                .key(authentication.getName())
+//                .key(authentication.getName())
+                .key(tokenDto.getAccessTokenExpiresIn().intValue())
                 .value(tokenDto.getRefreshToken())
                 .build();
 

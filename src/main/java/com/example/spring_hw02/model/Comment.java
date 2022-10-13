@@ -15,6 +15,7 @@ import javax.persistence.*;
 public class Comment {
 
     @Id
+    @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore
     private Long id;
@@ -27,7 +28,7 @@ public class Comment {
     private String comment;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "post", nullable = false)
     private Post post;
 
 

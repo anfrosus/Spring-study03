@@ -20,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
-    //시큐리티가 로그인 시 아래 메소드들 호출함
+    //시큐리티가 로그인 시 아래 메소드를 호출함
 
     //일단 유저 아이디가 있는지 파악
     @Override

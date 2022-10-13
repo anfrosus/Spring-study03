@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "post")
 public class Post extends TimeStamped {
 
     @Id
@@ -23,7 +24,7 @@ public class Post extends TimeStamped {
     private String title;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID", nullable = false)
+    @JoinColumn(nullable = false)
     private Member member;
 
     @Column(nullable = false)

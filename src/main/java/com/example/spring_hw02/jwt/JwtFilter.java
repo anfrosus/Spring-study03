@@ -42,10 +42,11 @@ public class JwtFilter extends OncePerRequestFilter {
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
             Authentication authentication = tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            //로그인, 토큰 발급 후 추가적인 요청을 보낼 때 토큰 검증과 함께 시큐리티컨텍스트에 저장.
         }
-
-
-        //어디로 넘어가나요 ㅠㅠ?
+            //어디로 넘어가나요 ㅠㅠ?
+            //else여야 하는거 아닌가? 실패시 필터체인으로 가는거아니여?
+            //else하니까 글작성이 안되네
         filterChain.doFilter(request, response);
     }
 

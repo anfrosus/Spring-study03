@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -27,6 +30,16 @@ public class AuthController {
     public ResponseEntity<TokenDto> login(@RequestBody AuthRequestDto authRequestDto) {
         return ResponseEntity.ok(authService.login(authRequestDto));
     }
+
+////responseform의 헤드 세팅하는 방법
+//    @PostMapping("/login")
+//    public CommonResponse login(@RequestBody MemberRequestDto memberRequestDto, HttpServletResponse response){
+//        TokenDto tokenDto = authService.login(memberRequestDto);
+//        CommonResponse commonResponse = new CommonResponse(tokenDto);
+//        response.setHeader("AT", tokenDto.getAccessToken());
+//        response.setHeader("RT", tokenDto.getRefreshToken());
+//        return commonResponse;
+//    }
 
     @PostMapping("/reissue")
     public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
